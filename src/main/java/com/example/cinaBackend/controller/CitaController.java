@@ -47,4 +47,14 @@ public class CitaController {
     public Cita actualizar(@PathVariable Long id, @RequestBody Cita cita) {
         return service.actualizar(id, cita);
     }
+
+    @PutMapping("/{id}/cancelar")
+    public Cita cancelar(@PathVariable Long id) {
+        return service.cancelar(id);
+    }
+
+    @PutMapping("/{id}/atender")
+    public Cita atender(@PathVariable Long id) {
+        return service.marcarAtendida(id);
+    }
 }

@@ -70,6 +70,10 @@ public class CitaService {
         Cita cita = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
 
+        if (cita.getEstado() == EstadoCita.ATENDIDA) {
+            throw new RuntimeException("La cita ya fue atendida y no puede modificarse");
+        }
+
         cita.setFecha(datos.getFecha());
         cita.setHora(datos.getHora());
         cita.setEstado(datos.getEstado());
@@ -79,6 +83,30 @@ public class CitaService {
                 .orElseThrow(() -> new RuntimeException("Paciente no existe"));
 
         cita.setPaciente(paciente);
+
+        return repository.save(cita);
+    }
+
+    public Cita cancelar(Long id) {
+
+        Cita cita = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+
+        cita.setEstado(EstadoCita.CANCELADO);
+
+        return repository.save(cita);
+    }
+
+    public Cita marcarAtendida(Long id) {
+
+        Cita cita = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+
+        if (cita.getEstado() == EstadoCita.CANCELADO) {
+            throw new RuntimeException("No se puede atender una cita cancelada");
+        }
+
+        cita.setEstado(EstadoCita.ATENDIDA);
 
         return repository.save(cita);
     }
