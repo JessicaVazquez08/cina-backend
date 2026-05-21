@@ -3,7 +3,7 @@ package com.example.cinaBackend.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "cina_users")
 public class User {
 
     @Id

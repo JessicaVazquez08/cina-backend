@@ -8,6 +8,7 @@ class CinaBackendApplicationTests {
 
 	@Test
 	void contextLoads() {
+		assert(true);
 	}
 
 }

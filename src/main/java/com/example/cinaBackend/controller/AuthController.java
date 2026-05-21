@@ -7,6 +7,7 @@ import com.example.cinaBackend.service.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin("*")
 public class AuthController {
 
     private final AuthService authService;
