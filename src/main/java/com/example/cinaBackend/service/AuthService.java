@@ -1,7 +1,11 @@
 package com.example.cinaBackend.service;
 
 import org.springframework.stereotype.Service;
+
+import com.example.cinaBackend.entity.User;
 import com.example.cinaBackend.repository.UserRepository;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -12,10 +16,9 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public boolean login(String email, String password) {
-        return userRepository
-                .findByEmail(email)
-                .map(user -> user.getPassword().equals(password))
-                .orElse(false);
+    public Optional<User> login(String email, String password) {
+
+        return userRepository.findByEmail(email)
+                .filter(user -> user.getPassword().equals(password));
     }
 }

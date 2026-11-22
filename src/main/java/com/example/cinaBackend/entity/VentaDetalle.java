@@ -1,11 +1,13 @@
 package com.example.cinaBackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "cina_venta_detalles")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,12 +21,15 @@ public class VentaDetalle {
 
     private Double precioVenta;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Producto producto;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Lote lote;
 
     @ManyToOne
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Venta venta;
 }

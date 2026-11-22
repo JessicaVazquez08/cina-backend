@@ -1,3 +1,4 @@
+
 package com.example.cinaBackend.entity;
 
 import jakarta.persistence.*;
@@ -17,6 +18,9 @@ public class Producto {
     private Integer stock;
     private Integer stockMinimo;
     private Double precioActual;
+
+    @Column(name = "imagen_url")
+    private String imagenUrl;
 
     @ManyToOne
     @JoinColumn(name = "marca_id")

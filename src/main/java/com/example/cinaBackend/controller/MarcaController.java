@@ -1,7 +1,9 @@
+
 package com.example.cinaBackend.controller;
 
 import com.example.cinaBackend.entity.Marca;
 import com.example.cinaBackend.service.MarcaService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class MarcaController {
     // LISTAR
     // =========================
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Marca> listar() {
         return service.listar();
     }
@@ -29,14 +32,16 @@ public class MarcaController {
     // CREAR
     // =========================
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Marca guardar(@RequestBody Marca marca) {
         return service.guardar(marca);
     }
 
     // =========================
-    // ACTUALIZAR (opcional)
+    // ACTUALIZAR
     // =========================
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Marca actualizar(@PathVariable Long id, @RequestBody Marca m) {
         return service.actualizar(id, m);
     }

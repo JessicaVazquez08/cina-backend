@@ -1,5 +1,6 @@
 package com.example.cinaBackend.entity;
 
+import com.example.cinaBackend.enums.Rol;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +17,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Rol role = Rol.USUARIO;
+
     // Getters y setters
     public Long getId() {
         return id;
@@ -29,6 +34,8 @@ public class User {
         return password;
     }
 
+    public Rol getRole() { return role; }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -40,4 +47,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setRole(Rol role) { this.role = role; }
 }

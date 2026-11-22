@@ -1,8 +1,13 @@
+
 package com.example.cinaBackend.controller;
 
 import com.example.cinaBackend.entity.Producto;
 import com.example.cinaBackend.service.ProductoService;
+
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,8 +22,13 @@ public class ProductoController {
         this.service = service;
     }
 
+    // =====================================
+    // LISTAR Y BUSCAR PRODUCTOS
+    // =====================================
     @GetMapping
-    public List<Producto> listar(@RequestParam(required = false) String search) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'USUARIO')")
+    public List<Producto> listar(
+            @RequestParam(required = false) String search) {
 
         if (search == null || search.trim().isEmpty()) {
             return service.listar();
@@ -27,13 +37,58 @@ public class ProductoController {
         return service.buscar(search);
     }
 
-    @PostMapping
+    // =====================================
+    // CREAR PRODUCTO - JSON
+    // =====================================
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public Producto guardar(@RequestBody Producto producto) {
+
         return service.guardar(producto);
     }
 
-    @PutMapping("/{id}")
-    public Producto actualizar(@PathVariable Long id, @RequestBody Producto p) {
-        return service.actualizar(id, p);
+    // =====================================
+    // CREAR PRODUCTO - MULTIPART
+    // =====================================
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public Producto guardarConImagen(
+            @RequestPart("producto") Producto producto,
+            @RequestPart(value = "imagen", required = false)
+                    MultipartFile imagen) {
+
+        return service.guardar(producto, imagen);
+    }
+
+    // =====================================
+    // ACTUALIZAR PRODUCTO - JSON
+    // =====================================
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    public Producto actualizar(
+            @PathVariable Long id,
+            @RequestBody Producto producto) {
+
+        return service.actualizar(id, producto);
+    }
+
+    // =====================================
+    // ACTUALIZAR PRODUCTO - MULTIPART
+    // =====================================
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    public Producto actualizarConImagen(
+            @PathVariable Long id,
+            @RequestPart("producto") Producto producto,
+            @RequestPart(value = "imagen", required = false)
+                    MultipartFile imagen) {
+
+        return service.actualizar(id, producto, imagen);
     }
 }
