@@ -1,10 +1,13 @@
+
 package com.example.cinaBackend.config;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,13 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
     @Value("${FRONTEND_URL:http://localhost:5173}")
     private String frontendUrl;
 
@@ -42,8 +44,12 @@ public class SecurityConfig {
         ));
 
         config.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "DELETE",
-                "OPTIONS", "PATCH"
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS",
+                "PATCH"
         ));
 
         config.setAllowedHeaders(List.of(
@@ -76,11 +82,26 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+
+                        // Solicitudes previas de CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Inicio de sesion
                         .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/", "/index.html", "/assets/**",
-                                "/favicon.ico").permitAll()
+
+                        // Imagenes publicas de productos
+                        .requestMatchers("/imagenes/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
+
+                        // Recursos publicos
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/assets/**",
+                                "/favicon.ico"
+                        ).permitAll()
+
+                        // El resto requiere autenticacion
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
